@@ -6,7 +6,7 @@ REQUEST_COUNT = Counter('http_requests_total', 'Contador de requisições HTTP')
 
 @app.route('/')
 def index():
-    return "Aplicação Flask rodando!", 200
+    return "Aplicação Flask rodando! V1.0", 200
 
 @app.route('/health')
 def health():
