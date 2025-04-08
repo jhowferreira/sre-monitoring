@@ -1,0 +1,14 @@
+groups:
+  - name: app_alerts
+    rules:
+      - alert: AltaTaxaDeErro
+        expr: |
+          (1 - (sum(rate(http_requests_total[5m]))
+               / sum(rate(http_requests_total[5m])))) * 100 > (100 - 99)
+        for: 1m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Taxa de erro maior que 1%"
+          description: "Mais de 1% das requisições falharam nos últimos 5 minutos."
+
