@@ -1,0 +1,39 @@
+name: CI Pipeline SRE Monitoring
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout do código
+        uses: actions/checkout@v3
+
+      - name: Instalar dependências Python
+        working-directory: app
+        run: |
+          python3 -m venv venv
+          source venv/bin/activate
+          pip install flask prometheus_client
+
+      - name: Validar Docker Compose
+        run: docker compose config
+
+      - name: Subir containers para testes
+        run: |
+          docker compose up -d
+          sleep 15
+
+      - name: Testar endpoint /health
+        run: |
+          curl --fail http://localhost:5000/health
+
+      - name: Finalizar containers
+        if: always()
+        run: docker compose down
+
